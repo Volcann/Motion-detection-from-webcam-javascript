@@ -4,6 +4,7 @@
 
 A lightweight browser‐based motion detection app that captures webcam video, detects motion in real time, and overlays a dynamic heatmap showing where motion has occurred. You can also adjust sensitivity on the fly with a slider, and automatically take snapshots when activity exceeds your configured threshold.
 
+<img src="https://github.com/Volcann/Motion-detection-from-webcam-javascript/blob/2d404fbffb1bdc454204b20658cbe87ba33af73f/assets/Screenshot%20from%202025-08-07%2014-20-52.png?raw=true" width="100%">
 
 <img src="https://user-images.githubusercontent.com/74038190/212284115-f47cd8ff-2ffb-4b04-b5bf-4d1c14c0247f.gif" width="100%">
 
