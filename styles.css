@@ -1,0 +1,45 @@
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: sans-serif;
+  margin: 0;
+  padding: 1rem;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #ffffff;
+}
+
+h1 {
+  margin-bottom: 1rem;
+}
+
+video,
+canvas {
+  border: 2px solid #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+}
+
+#controls {
+  margin-top: 1rem;
+}
+
+button {
+  padding: 0.6rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  border-radius: 0; /* sharp edges */
+  background: #2195c7ff; /* electric blue */
+  color: white;
+  margin: 0 0.1rem;
+  box-shadow: 0 0 10px rgba(0, 119, 255, 0.5);
+  transition: background 0.3s, transform 0.2s;
+}
+
+button:hover {
+  background: #6bcaf3ff; /* lighter blue on hover */
+  transform: scale(1.1);
+}

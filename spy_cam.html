@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spy Cam: Motion Detection</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <h1>🚨 Spy Cam: Motion Detection</h1>
+    <video id="video" width="640" height="480" autoplay muted></video>
+    <canvas
+      id="procCanvas"
+      width="320"
+      height="240"
+      style="display: none"
+    ></canvas>
+    <div id="controls">
+      <button id="startBtn">Start Camera</button>
+      <button id="stopBtn" disabled>Stop</button>
+    </div>
+    <script>
+      const video = document.getElementById("video");
+      const procCanvas = document.getElementById("procCanvas");
+      const ctx = procCanvas.getContext("2d");
+      const startBtn = document.getElementById("startBtn");
+      const stopBtn = document.getElementById("stopBtn");
+
+      let stream = null;
+      let prevData = null;
+      let detectionInterval = null;
+      let frameCount = 0;
+      let lastSnapshotTime = 0;
+
+      const THRESHOLD = 50;
+      const MOTION_PIXELS = 1500;
+      const INTERVAL = 200;
+      const SNAPSHOT_COOLDOWN = 5000;
+
+      async function startCamera() {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+        detectionInterval = setInterval(detectMotion, INTERVAL);
+      }
+
+      function stopCamera() {
+        clearInterval(detectionInterval);
+        stream.getTracks().forEach((track) => track.stop());
+        video.srcObject = null;
+        startBtn.disabled = false;
+        stopBtn.disabled = true;
+        prevData = null;
+        frameCount = 0;
+      }
+
+      function detectMotion() {
+        ctx.filter = "blur(2px)";
+        ctx.drawImage(video, 0, 0, procCanvas.width, procCanvas.height);
+        ctx.filter = "none";
+        const frame = ctx.getImageData(
+          0,
+          0,
+          procCanvas.width,
+          procCanvas.height
+        );
+
+        frameCount++;
+        if (frameCount < 5) {
+          prevData = frame.data;
+          return;
+        }
+
+        if (prevData) {
+          let motionCount = 0;
+          for (let i = 0; i < frame.data.length; i += 4) {
+            const diff =
+              Math.abs(frame.data[i] - prevData[i]) +
+              Math.abs(frame.data[i + 1] - prevData[i + 1]) +
+              Math.abs(frame.data[i + 2] - prevData[i + 2]);
+            if (diff > THRESHOLD) motionCount++;
+          }
+          const now = Date.now();
+          if (
+            motionCount > MOTION_PIXELS &&
+            now - lastSnapshotTime > SNAPSHOT_COOLDOWN
+          ) {
+            lastSnapshotTime = now;
+            takeSnapshot();
+          }
+        }
+        prevData = frame.data;
+      }
+
+      function takeSnapshot() {
+        const snapshotCanvas = document.createElement("canvas");
+        snapshotCanvas.width = video.videoWidth;
+        snapshotCanvas.height = video.videoHeight;
+        const snapshotCtx = snapshotCanvas.getContext("2d");
+        snapshotCtx.drawImage(video, 0, 0);
+        const dataURL = snapshotCanvas.toDataURL("image/png");
+        downloadImage(dataURL);
+      }
+
+      function downloadImage(dataUrl) {
+        const a = document.createElement("a");
+        a.href = dataUrl;
+        a.download = `snapshot_${Date.now()}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+
+      startBtn.addEventListener("click", startCamera);
+      stopBtn.addEventListener("click", stopCamera);
+    </script>
+  </body>
+</html>
