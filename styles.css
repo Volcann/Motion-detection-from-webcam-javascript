@@ -14,15 +14,36 @@ h1 {
   margin-bottom: 1rem;
 }
 
+/* Position container relative so heatmapCanvas can go on top */
+#videoContainer {
+  position: relative;
+}
+
 video,
-canvas {
+#heatmapCanvas {
   border: 2px solid #ffffff;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+  display: block;
+}
+
+/* make heatmap canvas sit exactly on top */
+#heatmapCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
 }
 
 #controls {
   margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+input[type="range"] {
+  cursor: pointer;
 }
 
 button {
