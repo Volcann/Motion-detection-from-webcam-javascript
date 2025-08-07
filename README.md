@@ -11,7 +11,7 @@ A lightweight browser‐based motion detection app that captures webcam video, d
 ## 📂 File Structure
 
 ```
-├── spy_cam.html           # Main HTML page
+├── spy_cam.html         # Main HTML page
 ├── styles.css           # Styling for layout, controls, and heatmap overlay
 ├── motion.js            # Motion detection, heatmap integration, & snapshot logic
 └── README.md            # This file
